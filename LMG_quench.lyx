@@ -1,0 +1,3863 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass revtex4-1
+\options notitlepage
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Quenches in the LMG model
+\end_layout
+
+\begin_layout Section
+LMG Model: Details for implementing numerically
+\end_layout
+
+\begin_layout Standard
+We start with the following Hamiltonian
+\begin_inset Formula 
+\begin{equation}
+H=-\frac{J}{N}\sum_{i<j}\gamma_{x}\sigma_{i}^{x}\sigma_{j}^{x}+\gamma_{y}\sigma_{i}^{y}\sigma_{j}^{y}-\Gamma\sum_{i}\sigma_{i}^{z}
+\end{equation}
+
+\end_inset
+
+A somewhat easier formula if we are more interested in the ferromagnetic
+ phase is, to make the following rotation of axis about 
+\begin_inset Formula $y$
+\end_inset
+
+ : 
+\begin_inset Formula $z\rightarrow x$
+\end_inset
+
+, 
+\begin_inset Formula $x\rightarrow-z$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align}
+H & =-\frac{J}{N}\sum_{i<j}\gamma_{z}\sigma_{i}^{z}\sigma_{j}^{z}+\gamma_{y}\sigma_{i}^{y}\sigma_{j}^{y}-\Gamma\sum_{i}\sigma_{i}^{x}\\
+ & =+\frac{J}{2N}\left(\sum_{i}\gamma_{z}\left(\sigma_{i}^{z}\right)^{2}+\gamma_{y}\left(\sigma_{i}^{y}\right)^{2}\right)-\frac{J}{2N}\left(\sum_{ij}\left(\gamma_{z}\sigma_{i}^{z}\sigma_{j}^{z}+\gamma_{y}\sigma_{i}^{y}\sigma_{j}^{y}\right)\right)-\Gamma\sum_{i}\sigma_{i}^{x}\\
+ & =\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\right)-\frac{J}{2N}\sum_{i,j}\left(\gamma_{z}\sigma_{i}^{z}\sigma_{j}^{z}+\gamma_{y}\sigma_{i}^{y}\sigma_{j}^{y}\right)-\Gamma\sum_{i}\sigma_{i}^{x}
+\end{align}
+
+\end_inset
+
+Now defining the total spin variables,
+\begin_inset Formula $S_{z}=\frac{1}{2}\sum_{i}\sigma_{i}^{z}$
+\end_inset
+
+, 
+\begin_inset Formula $S_{x}=\frac{1}{2}\sum_{i}\sigma_{i}^{x}$
+\end_inset
+
+, 
+\begin_inset Formula $S_{y}=\frac{1}{2}\sum_{i}\sigma_{i}^{y}$
+\end_inset
+
+, and 
+\begin_inset Formula $S^{2}=S_{x}^{2}+S_{y}^{2}+S_{z}^{2}$
+\end_inset
+
+ ,
+\begin_inset Formula $S_{\pm}=\left(S_{x}\pm iS_{y}\right)$
+\end_inset
+
+ we obtain,
+\begin_inset Formula 
+\begin{align*}
+H & =\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\right)-\frac{2J\gamma_{z}}{N}S_{z}^{2}-\frac{2J\gamma_{y}}{N}S_{y}^{2}-2\Gamma S_{x}\\
+ & =\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\right)-\frac{2J\gamma_{z}}{N}S_{z}^{2}+\frac{J\gamma_{y}}{2N}\left(S_{+}-S_{-}\right)^{2}-2\Gamma S_{x}\\
+ & =\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\right)-\frac{2J\gamma_{z}}{N}S_{z}^{2}-\frac{J\gamma_{y}}{2N}\left(S_{+}S_{-}+S_{-}S_{+}\right)+\frac{J\gamma_{y}}{2N}\left(S_{+}^{2}+S_{-}^{2}\right)-2\Gamma S_{x}\\
+ & =\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\right)-\frac{2J\gamma_{z}}{N}S_{z}^{2}-\frac{J\gamma_{y}}{N}\left(S^{2}-S_{z}^{2}\right)+\frac{J\gamma_{y}}{2N}\left(S_{+}^{2}+S_{-}^{2}\right)-\Gamma\left(S_{+}+S_{-}\right)\\
+\Rightarrow H & =\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\left(1-\frac{2S^{2}}{N}\right)\right)-\frac{J\left(2\gamma_{z}-\gamma_{y}\right)}{N}S_{z}^{2}+\frac{J\gamma_{y}}{2N}\left(S_{+}^{2}+S_{-}^{2}\right)-\Gamma\left(S_{+}+S_{-}\right)
+\end{align*}
+
+\end_inset
+
+We know that the eigenstates are just total angular momentum states given
+ by 
+\begin_inset Formula $|S,M\rangle$
+\end_inset
+
+ with 
+\begin_inset Formula $M\in\{-S,\cdots S\}$
+\end_inset
+
+ and 
+\begin_inset Formula $S\in\left\{ 0\cdots\frac{N}{2}\right\} $
+\end_inset
+
+.
+ Since different 
+\begin_inset Formula $S$
+\end_inset
+
+-sectors do not talk to each other, we will focus on the largest 
+\begin_inset Formula $S$
+\end_inset
+
+ given by 
+\begin_inset Formula $S=\frac{N}{2}$
+\end_inset
+
+.
+ This means 
+\begin_inset Formula $S^{2}\rightarrow\frac{N}{2}\left(\frac{N}{2}+1\right)$
+\end_inset
+
+.
+ Now in this sector we have,
+\begin_inset Formula 
+\begin{equation}
+H=\frac{J}{2}\left(\gamma_{z}-\frac{\gamma_{y}N}{2}\right)-\frac{J\left(2\gamma_{z}-\gamma_{y}\right)}{N}S_{z}^{2}+\frac{J\gamma_{y}}{2N}\left(S_{+}^{2}+S_{-}^{2}\right)-\Gamma\left(S_{+}+S_{-}\right)
+\end{equation}
+
+\end_inset
+
+Now, we need to find the action of the different spin operators on the states
+\begin_inset Formula 
+\begin{align}
+S_{z}|S,M\rangle & =M|S,M\rangle\\
+S^{2}\left|S,M\rangle\right| & =S\left(S+1\right)|S,M\rangle\\
+S_{+}|S,M\rangle & =\sqrt{S\left(S+1\right)-M\left(M+1\right)}|S,M+1\rangle\\
+S_{-}|S,M\rangle & =\sqrt{S\left(S+1\right)-M\left(M-1\right)}|S,M-1\rangle\\
+S_{+}S_{-}|S,M\rangle & =\left(S^{2}-S_{z}^{2}-S_{z}\right)|S,M\rangle=\left[S\left(S+1\right)-M\left(M-1\right)\right]|S,M\rangle\\
+S_{-}S_{+}|S,M\rangle & =\left[S\left(S+1\right)-M\left(M+1\right)\right]|S,M\rangle
+\end{align}
+
+\end_inset
+
+Now we are ready to write down the matrix elements,
+\begin_inset Formula 
+\begin{align}
+\left\langle S=\frac{N}{2},M\right|H\left|S=\frac{N}{2},M^{\prime}\right\rangle  & =\delta_{MM^{\prime}}\left[\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\left(1-\frac{2S\left(S+1\right)}{N}\right)\right)-\frac{J\left(2\gamma_{z}-\gamma_{y}\right)}{N}M^{2}\right]+\nonumber \\
+ & \ \ \ \delta_{MM^{\prime}-2}\left[\frac{J\gamma_{y}}{2N}\sqrt{\left(S\left(S+1\right)-\left(M+2\right)\left(M+1\right)\right)\left(S\left(S+1\right)-M\left(M+1\right)\right)}\right]+\nonumber \\
+ & \ \ \ \delta_{MM^{\prime}+2}\left[\frac{J\gamma_{y}}{2N}\sqrt{\left(S\left(S+1\right)-\left(M-2\right)\left(M-1\right)\right)\left(S\left(S+1\right)-M\left(M-1\right)\right)}\right]+\nonumber \\
+ & \ \ \ \delta_{MM^{\prime}-1}\left[-\Gamma\sqrt{\left(S\left(S+1\right)-M\left(M+1\right)\right)}\right]+\nonumber \\
+ & \ \ \ \delta_{MM^{\prime}+1}\left[-\Gamma\sqrt{\left(S\left(S+1\right)-M\left(M-1\right)\right)}\right]
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Ground state critical point
+\end_layout
+
+\begin_layout Standard
+Let us examine the Hamiltonian first,
+\begin_inset Formula 
+\begin{align}
+H & =\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\right)-\frac{2J\gamma_{z}}{N}S_{z}^{2}-\frac{2J\gamma_{y}}{N}S_{y}^{2}-2\Gamma S_{x}\nonumber \\
+ & =\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\right)-\frac{2J}{N}\left[\left(\sqrt{\gamma_{z}}S_{z}\right)^{2}+\left(\sqrt{\gamma_{y}}S_{y}\right)^{2}\right]-2\Gamma S_{x}\nonumber \\
+ & =\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\right)-\frac{2J}{N}\left[\left(\sqrt{\gamma_{z}}S_{z}+i\sqrt{\gamma_{y}}S_{y}\right)\left(\sqrt{\gamma_{z}}S_{z}-i\sqrt{\gamma_{y}}S_{y}\right)-i\sqrt{\gamma_{z}\gamma_{y}}\left(S_{y}S_{z}-S_{z}S_{y}\right)\right]-2\Gamma S_{x}\nonumber \\
+ & =\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\right)-\frac{2J}{N}\left[\left(\sqrt{\gamma_{z}}S_{z}+i\sqrt{\gamma_{y}}S_{y}\right)\left(\sqrt{\gamma_{z}}S_{z}-i\sqrt{\gamma_{y}}S_{y}\right)-i\sqrt{\gamma_{z}\gamma_{y}}\left(iS_{x}\right)\right]-2\Gamma S_{x}\nonumber \\
+ & =\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\right)-\frac{2J}{N}\left[\left(\sqrt{\gamma_{z}}S_{z}+i\sqrt{\gamma_{y}}S_{y}\right)\left(\sqrt{\gamma_{z}}S_{z}-i\sqrt{\gamma_{y}}S_{y}\right)\right]-\left(2\Gamma+\frac{2J}{N}\sqrt{\gamma_{z}\gamma_{y}}\right)S_{x}\nonumber \\
+\Rightarrow H & =\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\right)-\frac{2J\sqrt{\gamma_{z}+\gamma_{y}}}{N}S_{\phi}^{\dagger}S_{\phi}-\left(2\Gamma+\frac{2J}{N}\sqrt{\gamma_{z}\gamma_{y}}\right)S_{x}
+\end{align}
+
+\end_inset
+
+where, 
+\begin_inset Formula $S_{\phi}=\frac{1}{\sqrt{\gamma_{z}+\gamma_{y}}}\left(\sqrt{\gamma_{z}}S_{z}-i\sqrt{\gamma_{y}}S_{y}\right)=\left|\cos\phi\right|S_{z}-i\left|\sin\phi\right|S_{y}$
+\end_inset
+
+ (when 
+\begin_inset Formula $\gamma_{z}=\gamma\cos\phi$
+\end_inset
+
+, 
+\begin_inset Formula $\gamma_{y}=\gamma\sin\phi$
+\end_inset
+
+).
+ The critical point from a Holstein Primakoff approximation is 
+\begin_inset Formula 
+\[
+\Gamma_{c}=J\max\left(\gamma_{y},\gamma_{z}\right)
+\]
+
+\end_inset
+
+The order parameter to calculate is 
+\begin_inset Formula $\left\langle S_{y}^{2}+S_{z}^{2}\right\rangle $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculating Magnetization
+\end_layout
+
+\begin_layout Subsubsection
+\begin_inset Formula $z$
+\end_inset
+
+-direction
+\end_layout
+
+\begin_layout Standard
+Total magnetization, accounting for lack of symmetry breaking in finite
+ size systems is
+\begin_inset Formula 
+\[
+m_{z}^{2}=\left(\text{Magnetization}\right)^{2}=\left\langle \left(\frac{1}{N}\sum_{i}\sigma_{i}^{z}\right)^{2}\right\rangle =\left\langle \frac{4}{N^{2}}\left(S^{z}\right)^{2}\right\rangle =\frac{4}{N^{2}}\left(\sum_{M=-S}^{S}\left|\alpha_{M}\right|^{2}M^{2}\right)
+\]
+
+\end_inset
+
+where the ground state is given as 
+\begin_inset Formula $|GS\rangle=\sum_{M}\alpha_{M}|S,M\rangle$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Let us discuss a couple of known properties of the ground state.
+ The finite size dependence of the magnetization dependes on whether the
+ system is in the critical point or deep in the disordered phase,
+\begin_inset Formula 
+\begin{align}
+\left\langle m^{2}\right\rangle  & \sim N^{-2/3}\ \text{at the QCP,}\Gamma=J\\
+\left\langle m^{2}\right\rangle  & \sim N^{-1}\ \text{disordered phase, }\Gamma\gg J\\
+\left\langle m^{2}\right\rangle _{{\rm th}} & \sim N^{-1/2}\ \text{at a thermal CP}
+\end{align}
+
+\end_inset
+
+where note that the last line is a thermal expectation value at the critical
+ point.
+ We have verified the first two properties in the numerically obtained magnetiza
+tion.
+\end_layout
+
+\begin_layout Subsubsection
+\begin_inset Formula $y$
+\end_inset
+
+-direction
+\end_layout
+
+\begin_layout Standard
+The y-direction magnetization in the ground state 
+\begin_inset Formula $|GS\rangle=\sum_{M}\alpha_{M}|S,M\rangle$
+\end_inset
+
+is defined as,
+\begin_inset Formula 
+\begin{align}
+m_{y}^{2} & =\left\langle \left(\frac{1}{N}\sum_{i}\sigma_{i}^{y}\right)^{2}\right\rangle =\left\langle \frac{4}{N^{2}}\left(S^{y}\right)^{2}\right\rangle =\frac{1}{N^{2}}\left\langle \left(S_{+}-S_{-}\right)^{2}\right\rangle \nonumber \\
+ & =\frac{1}{N^{2}}\left\langle \left(S_{+}\right)^{2}+\left(S_{-}\right)^{2}-\left(S_{+}S_{-}+S_{-}S_{+}\right)\right\rangle \nonumber \\
+ & =\frac{1}{N^{2}}\left\langle \left(S_{+}\right)^{2}+\left(S_{-}\right)^{2}-2\left(S^{2}-S_{z}^{2}\right)\right\rangle \nonumber \\
+ & =-\frac{2}{N^{2}}\left(S\left(S+1\right)-\sum_{M=-S}^{S}\left|\alpha_{M}\right|^{2}M^{2}\right)+\frac{1}{N^{2}}\left\langle \left(S_{+}\right)^{2}+\left(S_{-}\right)^{2}\right\rangle \nonumber \\
+ & =-\frac{2}{N^{2}}\left(S\left(S+1\right)-\sum_{M=-S}^{S}\left|\alpha_{M}\right|^{2}M^{2}\right)\nonumber \\
+ & +\frac{1}{N^{2}}\left(\sum_{M=-S}^{S}\alpha_{M+2}^{*}\alpha_{M}\sqrt{\left(S\left(S+1\right)-\left(M+2\right)\left(M+1\right)\right)\left(S\left(S+1\right)-M\left(M+1\right)\right)}\right.\nonumber \\
+ & \ \ \ \ \ \ \ \ \ \ \ \ \ \left.+\alpha_{M-2}^{*}\alpha_{M}\sqrt{\left(S\left(S+1\right)-\left(M-2\right)\left(M-1\right)\right)\left(S\left(S+1\right)-M\left(M-1\right)\right)}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+'
+\begin_inset Formula $\phi$
+\end_inset
+
+'-direction
+\end_layout
+
+\begin_layout Standard
+We calculate the expectation value of a general operator :
+\begin_inset Formula $S_{\phi}=\left(A_{z}S_{z}+A_{y}S_{y}\right)=\left(\frac{1}{2}\left(A_{s}\sum_{i}\sigma_{i}^{z}+A_{y}\sum_{i}\sigma_{i}^{y}\right)\right)$
+\end_inset
+
+.
+ In the ground state 
+\begin_inset Formula $|GS\rangle=\sum_{M}\alpha_{M}|S,M\rangle$
+\end_inset
+
+,
+\begin_inset Formula 
+\begin{align}
+m_{\phi}^{2} & =\left\langle \frac{4}{N^{2}}S_{\phi}^{\dagger}S_{\phi}\right\rangle \nonumber \\
+ & =\frac{4}{N^{2}}\left|\sum_{M}\left(A_{z}S_{z}+A_{y}S_{y}\right)\alpha_{M}|S,M\rangle\right|^{2}\nonumber \\
+ & =\frac{4}{N^{2}}\left|\sum_{M}\alpha_{M}A_{z}M+\sum_{M}\alpha_{M}\left(A_{y}\frac{1}{2i}\left(S_{+}-S_{-}\right)\right)|S,M\rangle\right|^{2}\nonumber \\
+ & =\frac{4}{N^{2}}\left|\sum_{M}\alpha_{M}A_{z}M|S,M\rangle\right.+\nonumber \\
+ & \ \ \ \ \ \ \ \ \ \ \left.+\frac{A_{y}}{2i}\sum_{M}\alpha_{M}\left(\sqrt{S\left(S+1\right)-M\left(M+1\right)}|S,M+1\rangle-\sqrt{S\left(S+1\right)-M\left(M-1\right)}|S,M-1\rangle\right)\right|^{2}
+\end{align}
+
+\end_inset
+
+Therefore we have the following definition for 
+\begin_inset Formula $\left|m_{\phi}\right|^{2}=\frac{4}{N^{2}}\sum_{M=-S}^{S}\left|A_{M}\right|^{2}$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+A_{M}=\begin{cases}
+A_{z}S\alpha_{S}+\frac{A_{y}}{2i}\alpha_{S-1}\sqrt{2S} & M=S\\
+-A_{z}S\alpha_{-S}-\frac{A_{y}}{2i}\alpha_{-S+1}\sqrt{2S} & M=-S\\
+\alpha_{M}A_{z}M+\frac{A_{y}}{2i}\left(\alpha_{M-1}\sqrt{S\left(S+1\right)-M\left(M-1\right)}-\alpha_{M+1}\sqrt{S\left(S+1\right)-M\left(M+1\right)}\right) & \forall M\neq S,-S
+\end{cases}
+\]
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+(a) Magnetization as a function of magnetic field.
+ (b) Phase diagram as a function of 
+\begin_inset Formula $\gamma_{z}$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma_{y}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Properties at Finite Temperature
+\end_layout
+
+\begin_layout Standard
+Let us calculate the properties at finite temperature of the LMG Model.
+ We will use the standard mean-field picture to calculate the phase transition.
+ We have the Hamiltonian,
+\begin_inset Formula 
+\begin{align}
+H & =-\frac{J}{N}\sum_{i<j}\gamma_{z}\sigma_{i}^{z}\sigma_{j}^{z}+\gamma_{y}\sigma_{i}^{y}\sigma_{j}^{y}-\Gamma\sum_{i}\sigma_{i}^{x}\\
+ & =\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\right)-\frac{2J\gamma_{z}}{N}S_{z}^{2}-\frac{2J\gamma_{y}}{N}S_{y}^{2}-2\Gamma S_{x}
+\end{align}
+
+\end_inset
+
+In this section, it is much more convenient to go back to the original represent
+ation, 
+\begin_inset Formula 
+\begin{align}
+H^{\prime} & =-\frac{J}{N}\sum_{i<j}\gamma_{x}\sigma_{i}^{x}\sigma_{j}^{x}+\gamma_{y}\sigma_{i}^{y}\sigma_{j}^{y}-\Gamma\sum_{i}\sigma_{i}^{z}\\
+ & =\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\right)-\frac{2J\gamma_{z}}{N}S_{x}^{2}-\frac{2J\gamma_{y}}{N}S_{y}^{2}-2\Gamma S_{z}
+\end{align}
+
+\end_inset
+
+Using a mean-field ansatz, 
+\begin_inset Formula $m_{a}=\frac{1}{N}\sum_{i}\left\langle \sigma_{i}^{a}\right\rangle $
+\end_inset
+
+, we have 
+\begin_inset Formula 
+\begin{align*}
+H & =\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\right)-\sum_{i}\left[\frac{J\gamma_{x}}{2}m_{x}\sigma_{i}^{x}+\frac{J\gamma_{y}}{2}m_{y}\sigma_{i}^{y}+\Gamma\sigma_{i}^{z}\right]
+\end{align*}
+
+\end_inset
+
+We drop the term proportional to identity.
+ The partition function is
+\begin_inset Formula 
+\begin{align*}
+Z & =\text{Tr}\left\{ \prod_{i}\exp\left[\beta\left(\frac{J\gamma_{x}}{2}m_{x}\sigma_{i}^{x}+\frac{J\gamma_{y}}{2}m_{y}\sigma_{i}^{y}+\Gamma\sigma_{i}^{z}\right)\right]\right\} \\
+ & =\text{Tr}\left\{ \prod_{i}\exp\left[\left(\frac{\beta J\gamma_{x}m_{x}}{2},\frac{\beta J\gamma_{y}m_{y}}{2},\beta\Gamma\right)\cdot\boldsymbol{\sigma}_{i}\right]\right\} =\text{Tr}\left\{ \prod_{i}\exp\left[\boldsymbol{K}\cdot\boldsymbol{\sigma}_{i}\right]\right\} \\
+ & =\text{Tr}\bigotimes_{i}\left[\cosh K+\hat{K}.\boldsymbol{\sigma}_{i}\sinh K\right]\text{, with }K=\beta\sqrt{\frac{1}{4}J^{2}\left(\gamma_{x}^{2}m_{x}^{2}+\gamma_{y}^{2}m_{y}^{2}\right)+\Gamma^{2}}\\
+Z & =\left(2\cosh K\right)^{N}
+\end{align*}
+
+\end_inset
+
+We have the self consistency equations,
+\begin_inset Formula 
+\begin{align*}
+m_{x} & =\frac{\left(2\cosh K\right)^{N-1}\hat{K}_{x}2\sinh K}{\left(2\cosh K\right)^{N}}=\frac{\beta J\gamma_{x}m_{x}}{2K}\tanh K\\
+m_{y} & =\frac{\beta J\gamma_{y}m_{y}}{2K}\tanh K
+\end{align*}
+
+\end_inset
+
+To obtain the phase boundary, we take the limit 
+\begin_inset Formula $m_{x},m_{y}\rightarrow0$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\frac{2\Gamma}{J\gamma_{x,y}} & =\tanh K=\tanh\beta\Gamma\\
+\Rightarrow & \frac{\frac{2\Gamma}{J\gamma_{x,y}}+1}{-\frac{2\Gamma}{J\gamma_{x,y}}+1}=e^{2\beta\Gamma}\\
+\Rightarrow\beta & =\frac{1}{2\Gamma}\log\left(\frac{J\gamma_{x,y}+2\Gamma}{J\gamma_{x,y}-2\Gamma}\right)///check\ \ Calculation
+\end{align*}
+
+\end_inset
+
+So basically we take the larger two 
+\begin_inset Formula $\gamma_{x},\gamma_{y}$
+\end_inset
+
+ to obtain 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+To calculate numerically, we do the following :
+\end_layout
+
+\begin_layout Enumerate
+Diagonalize 
+\begin_inset Formula $H$
+\end_inset
+
+ in each spin sector, and obtain energies and eigenvectors : 
+\begin_inset Formula $E_{n}(s=0\cdots S=N/2)$
+\end_inset
+
+ and 
+\begin_inset Formula $|\Phi_{n}\rangle$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\[
+H=\oplus\sum_{n=-S}^{+S}E_{n}(S)|\Phi_{n}\rangle\langle\Phi_{n}|
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Obtain the magnetization of each eigenstate 
+\begin_inset Formula $M_{\Phi_{n}}^{2}$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+The average magnetization is 
+\begin_inset Formula 
+\begin{align}
+\left\langle M\right\rangle  & =\frac{\sum_{s}D\left(S\right)\sum_{n}M_{\Phi_{n}}e^{-\beta E_{n}(s)}}{\sum_{s}D\left(S\right)\sum_{n}e^{-\beta E_{n}(s)}}\\
+ & =\frac{\sum_{s}D\left(S\right)e^{-\beta E_{\text{min}}(s)}\sum_{n}M_{\Phi_{n}}e^{-\beta\left(E_{n}(s)-E_{\text{min}}(s)\right)}}{\sum_{s}D\left(S\right)e^{-\beta E_{\text{min}}(s)}\sum_{n}e^{-\beta\left(E_{n}(s))-E_{\text{min}}(s)\right)}}\\
+ & =\frac{\sum_{s}D\left(S\right)e^{-\beta\left(E_{\text{min}}(s)-E_{\text{min}}^{{\rm tot}}\right)}\sum_{n}M_{\Phi_{n}}e^{-\beta\left(E_{n}(s)-E_{\text{min}}(s)\right)}}{\sum_{s}D\left(S\right)e^{-\beta\left(E_{\text{min}}(s)-E_{\text{min}}^{{\rm tot}}\right)}\sum_{n}e^{-\beta\left(E_{n}(s))-E_{\text{min}}(s)\right)}}
+\end{align}
+
+\end_inset
+
+where we do the last two steps are taken to avoid having to take very large
+ exponentials, which often happens because the minimum energy is often negative.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+(a) Finite temperature phase diagram vs mean field solution.
+ (b) Scaling with system size, of different quantities 
+\begin_inset Formula $\left\langle S_{z}^{2}\right\rangle _{\beta}$
+\end_inset
+
+, 
+\begin_inset Formula $\left\langle S_{y}^{2}\right\rangle _{\beta}$
+\end_inset
+
+ and 
+\begin_inset Formula $\left\langle S_{z}^{2}+S_{y}^{2}\right\rangle _{\beta}$
+\end_inset
+
+ as a function of system size 
+\begin_inset Formula $L$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Unequal time correlation function 
+\end_layout
+
+\begin_layout Subsubsection
+\begin_inset Formula $S_{\phi}$
+\end_inset
+
+ correlation 
+\begin_inset Formula $\left\langle S_{\phi}\left(t_{2}\right)S_{\phi}\left(t_{1}\right)\right\rangle _{0}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We note that 
+\begin_inset Formula $S_{\phi}=A_{z}S_{z}+A_{y}S_{y}$
+\end_inset
+
+.
+ We have, in the initial state, 
+\begin_inset Formula $|\psi_{0}\rangle$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\left\langle S_{\phi}\left(t_{1}\right)S_{\phi}\left(t_{2}\right)\right\rangle _{0} & =\left\langle \psi_{0}\left|S_{\phi}\left(t_{1}\right)S_{\phi}\left(t_{2}\right)\right|\psi_{0}\right\rangle \\
+ & =\left\langle \psi_{0}\left|e^{iHt_{1}}S_{\phi}e^{iH\left(t_{2}-t_{1}\right)}S_{\phi}\left(t\right)e^{-iHt_{2}}\right|\psi_{0}\right\rangle 
+\end{align*}
+
+\end_inset
+
+Let us obtain the action of 
+\begin_inset Formula $S_{\phi}$
+\end_inset
+
+ on an arbitrary state 
+\begin_inset Formula $|\Psi\rangle=\sum_{M}\alpha_{M}|S,M\rangle$
+\end_inset
+
+,
+\begin_inset Formula 
+\begin{align*}
+S_{\phi}|\Psi\rangle & =\sum_{M}\left(A_{z}S_{z}+A_{y}S_{y}\right)\alpha_{M}|S,M\rangle\\
+ & =\sum_{M}\alpha_{M}A_{z}M|S,M\rangle+\sum_{M}\alpha_{M}\left(A_{y}\frac{1}{2i}\left(S_{+}-S_{-}\right)\right)|S,M\rangle\\
+ & =\sum_{M}\alpha_{M}A_{z}M|S,M\rangle+\frac{A_{y}}{2i}\sum_{M}\alpha_{M}\left(\sqrt{S\left(S+1\right)-M\left(M+1\right)}|S,M+1\rangle-\sqrt{S\left(S+1\right)-M\left(M-1\right)}|S,M-1\rangle\right)
+\end{align*}
+
+\end_inset
+
+Therefore, 
+\begin_inset Formula $S_{\phi}|\Psi\rangle=\sum_{M}B_{M}|S,M\rangle$
+\end_inset
+
+ is given as,
+\begin_inset Formula 
+\[
+B_{M}=\begin{cases}
+A_{z}S\alpha_{S}+\frac{A_{y}}{2i}\alpha_{S-1}\sqrt{2S} & M=S\\
+-A_{z}S\alpha_{-S}-\frac{A_{y}}{2i}\alpha_{-S+1}\sqrt{2S} & M=-S\\
+\alpha_{M}A_{z}M+\frac{A_{y}}{2i}\left(\alpha_{M-1}\sqrt{S\left(S+1\right)-M\left(M-1\right)}-\alpha_{M+1}\sqrt{S\left(S+1\right)-M\left(M+1\right)}\right) & \forall M\neq S,-S
+\end{cases}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Finite temperature 
+\begin_inset Formula $S_{\phi}$
+\end_inset
+
+ Correlation : 
+\begin_inset Formula $\left\langle S_{\phi}\left(t_{2}\right)S_{\phi}\left(t_{1}\right)\right\rangle _{\beta}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We have the correlation defined as follows,
+\begin_inset Formula 
+\begin{align*}
+\left\langle S_{\phi}\left(t_{2}\right)S_{\phi}\left(t_{1}\right)\right\rangle _{\beta} & =\frac{\sum_{s}D\left(S\right)\sum_{n}\left\langle S_{\phi}\left(t_{2}\right)S_{\phi}\left(t_{1}\right)\right\rangle _{\Phi_{n}}e^{-\beta E_{n}(s)}}{\sum_{s}D\left(S\right)\sum_{n}e^{-\beta E_{n}(s)}}\\
+ & =\frac{\sum_{s}D\left(S\right)e^{-\beta\left(E_{\text{min}}(s)-E_{\text{min}}^{{\rm tot}}\right)}\sum_{n}\left\langle S_{\phi}\left(t_{2}\right)S_{\phi}\left(t_{1}\right)\right\rangle _{\Phi_{n}}e^{-\beta\left(E_{n}(s)-E_{\text{min}}(s)\right)}}{\sum_{s}D\left(S\right)e^{-\beta\left(E_{\text{min}}(s)-E_{\text{min}}^{{\rm tot}}\right)}\sum_{n}e^{-\beta\left(E_{n}(s))-E_{\text{min}}(s)\right)}}
+\end{align*}
+
+\end_inset
+
+We can thus use the above formulations to find the finite temperature expectatio
+n value.
+\begin_inset Formula 
+\begin{align*}
+\left\langle \left[S_{z}\left(t\right),S_{z}\left(t^{\prime}\right)\right]_{\pm}\right\rangle _{0} & =\left\langle S_{z}\left(t\right)S_{z}\left(t^{\prime}\right)\pm S_{z}\left(t^{\prime}\right)S_{z}\left(t\right)\right\rangle _{0}\\
+ & =\sum_{M,M\prime}\langle S,M^{\prime}|\alpha_{M^{\prime}}^{*}\left(e^{iHt}S_{z}e^{iH\left(t^{\prime}-t\right)}S_{z}e^{-iHt^{\prime}}\pm e^{iHt^{\prime}}S_{z}e^{iH\left(t-t^{\prime}\right)}S_{z}e^{-iHt}\right)\alpha_{M}|S,M\rangle\\
+ & =\sum_{M,M^{\prime},M^{\prime\prime}}\alpha_{M^{\prime}}^{*}\alpha_{M}\langle S,M^{\prime}|\left(e^{iHt}S_{z}e^{iH\left(t^{\prime}-t\right)}S_{z}e^{-iHt^{\prime}}\pm e^{iHt^{\prime}}S_{z}e^{iH\left(t-t^{\prime}\right)}S_{z}e^{-iHt}\right)|S,M\rangle
+\end{align*}
+
+\end_inset
+
+Compared to 
+\begin_inset Formula $\left\langle S_{z}^{2}\left(t\right)\right\rangle $
+\end_inset
+
+,
+\begin_inset Formula 
+\begin{align*}
+\left\langle S_{z}^{2}\left(t\right)\right\rangle  & =\left\langle e^{iHt}S_{z}^{2}e^{-iHt}\right\rangle _{0}\\
+ & =S_{z}^{2}e^{-iHt}\sum_{M}\alpha_{M}|S,M\rangle
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Entanglement Entropy
+\end_layout
+
+\begin_layout Standard
+Let us discuss the numerical method to compute the entanglement entropy.
+ 
+\end_layout
+
+\begin_layout Subsection
+Bipartition
+\end_layout
+
+\begin_layout Standard
+First let us consider a bipartition, 
+\begin_inset Formula $A$
+\end_inset
+
+ to the left of 
+\begin_inset Formula $B$
+\end_inset
+
+.
+ Rewriting, 
+\begin_inset Formula $S_{z}=S_{zA}+S_{zB}$
+\end_inset
+
+.We have,
+\begin_inset Formula 
+\begin{align*}
+H & =-\frac{J}{N}\sum_{i<j}\gamma_{z}\sigma_{i}^{z}\sigma_{j}^{z}+\gamma_{y}\sigma_{i}^{y}\sigma_{j}^{y}-\Gamma\sum_{i}\sigma_{i}^{x}\\
+ & =\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\right)-\frac{2J\gamma_{z}}{N}S_{z}^{2}-\frac{2J\gamma_{y}}{N}S_{y}^{2}-2\Gamma S_{x}\\
+\Rightarrow H & =\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\right)-\frac{2J\gamma_{z}}{N}S_{zA}^{2}-\frac{2J\gamma_{y}}{N}S_{yA}^{2}-2\Gamma S_{xA}\\
+ & -\frac{2J\gamma_{z}}{N}S_{zB}^{2}-\frac{2J\gamma_{y}}{N}S_{yB}^{2}-2\Gamma S_{xB}-\frac{4J\gamma_{z}}{N}S_{zA}S_{zB}-\frac{4J\gamma_{y}}{N}S_{yA}S_{yB}
+\end{align*}
+
+\end_inset
+
+Now, we can redefine the Hamiltonian in the basis of 
+\begin_inset Formula $|S_{A},M_{A};S_{B},M_{B}\rangle$
+\end_inset
+
+.
+ To do so we need to use the definitions of 
+\begin_inset Formula $S_{\pm}=S_{\pm A}+S_{\pm B}$
+\end_inset
+
+,
+\begin_inset Formula 
+\begin{align*}
+H & =\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\left(1-\frac{2S^{2}}{N}\right)\right)-\frac{J\left(2\gamma_{z}-\gamma_{y}\right)}{N}S_{z}^{2}+\frac{J\gamma_{y}}{2N}\left(S_{+}^{2}+S_{-}^{2}\right)-\Gamma\left(S_{+}+S_{-}\right)\\
+ & =\frac{J}{2}\left(\gamma_{z}+\gamma_{y}\left(1-\frac{2S^{2}}{N}\right)\right)-\frac{J\left(2\gamma_{z}-\gamma_{y}\right)}{N}\left(S_{zA}^{2}+S_{zB}^{2}+2S_{zA}S_{zB}\right)\\
+ & \ \ +\frac{J\gamma_{y}}{2N}\left(S_{+A}^{2}+S_{+B}^{2}+2S_{+A}S_{+B}\right)+\frac{J\gamma_{y}}{2N}\left(S_{-A}^{2}+S_{-B}^{2}+2S_{-A}S_{-B}\right)\\
+ & \ \ -\Gamma\left(S_{+A}+S_{+A}+S_{-A}+S_{-B}\right)
+\end{align*}
+
+\end_inset
+
+Now the matrix has dimensions 
+\begin_inset Formula $(2S_{A}+1)(2S_{B}+1)\times(2S_{A}+1)(2S_{B}+1)$
+\end_inset
+
+ with both 
+\begin_inset Formula $S_{A}$
+\end_inset
+
+ and 
+\begin_inset Formula $S_{B}$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+|S=N/2,S\rangle=|S_{A},S_{A};S-S_{A},S-S_{A}\rangle
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Quenching the magnetic field: Holstien-Primakoff Approximation
+\end_layout
+
+\begin_layout Subsection
+Case with 
+\begin_inset Formula $\gamma_{z}=1$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma_{y}=0$
+\end_inset
+
+.
+ [Numeric: Lmg_sim_v0.ipynb]
+\end_layout
+
+\begin_layout Standard
+In the following I translate the Holstein Primakoff to my language (from
+ Mohammad's).
+ Consider the Hamilotnian 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+H=-\frac{2J}{N}(S_{{\rm tot}}^{z})^{2}-2\Gamma S_{{\rm tot}}^{x}
+\end{equation}
+
+\end_inset
+
+Using the Holstein Primakoff transformation, we have
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+S_{{\rm tot}}^{x} & =\frac{N}{2}-a^{\dagger}a\\
+S_{{\rm tot}}^{z} & =\frac{1}{2}\sqrt{N}(a+a^{\dagger})
+\end{align}
+
+\end_inset
+
+the Hamiltonian turns into
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+H & =2\Gamma a^{\dagger}a-\frac{J}{2}(a+a^{\dagger})^{2}-\Gamma N\\
+ & =2J[-\frac{1}{4}(a+a^{\dagger})^{2}+ga^{\dagger}a]
+\end{align}
+
+\end_inset
+
+where 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $g\equiv\frac{\Gamma}{J}$
+\end_inset
+
+.
+ It is more convenient to define 
+\begin_inset Quotes eld
+\end_inset
+
+position
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+momentum
+\begin_inset Quotes erd
+\end_inset
+
+ operators as
+\begin_inset Formula 
+\begin{align}
+a & =\frac{1}{\sqrt{2}}(x+ip)\\
+a^{\dagger} & =\frac{1}{\sqrt{2}}(x-ip)
+\end{align}
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+In this representation, the Hamiltonian takes the form
+\begin_inset Formula 
+\begin{align}
+H & =2J\left[-\frac{1}{2}x^{2}+\frac{1}{2}g(x^{2}+p^{2})\right]=2J\left[\frac{1}{2}gp^{2}+\frac{1}{2}(g-1)x^{2}\right]\\
+ & =2\Gamma\left[\frac{1}{2}p^{2}+\frac{1}{2}\frac{g-1}{g}x^{2}\right]
+\end{align}
+
+\end_inset
+
+It is advantageous to redefine position and momentum variables as 
+\begin_inset Formula $x\to\sqrt{2\Gamma}\tilde{x}$
+\end_inset
+
+ and 
+\begin_inset Formula $p\to\tilde{p}/\sqrt{2\Gamma}$
+\end_inset
+
+ which satisfies their commutation relation, but leads to a standard form
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+H_{0}=\frac{1}{2}\tilde{p}^{2}+\frac{1}{2}\omega^{2}\tilde{x}^{2}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\omega^{2}\equiv4\Gamma^{2}(g-1)/g$
+\end_inset
+
+.
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Now consider a quench of the form 
+\begin_inset Formula $g_{0}\to g$
+\end_inset
+
+.
+ Inital state 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+has equal distribution of energy in momentum and position terms of hamornic
+ oscillator, 
+\begin_inset Formula $\langle\tilde{p}^{2}/2\rangle=\omega_{0}/4$
+\end_inset
+
+ and 
+\begin_inset Formula $\langle\omega_{0}^{2}\tilde{x}^{2}/2\rangle_{0}=\omega_{0}/4$
+\end_inset
+
+, which yields 
+\begin_inset Formula $\langle\tilde{p}^{2}\rangle_{0}=\omega_{0}/2$
+\end_inset
+
+ and 
+\begin_inset Formula $\langle\tilde{x}^{2}\rangle_{0}=1/(2\omega_{0})$
+\end_inset
+
+.
+ This means we have in the initial state
+\begin_inset Formula 
+\begin{equation}
+\langle p^{2}\rangle_{0}=\frac{\omega_{0}}{4\Gamma_{0}}\text{, and }\langle x^{2}\rangle_{0}=\frac{\Gamma_{0}}{\omega_{0}},\text{with \omega_{0}^{2}\equiv\ensuremath{\frac{4\Gamma_{0}^{2}(g_{0}-1)}{g_{0}}}}
+\end{equation}
+
+\end_inset
+
+Now, evolving under the quench Hamiltonian, which is a harmonic oscillator,
+ we have the operator equation of motion after the quench is simply 
+\begin_inset Formula $\ddot{\tilde{x}}+\omega^{2}\tilde{x}=0$
+\end_inset
+
+ which admits a general solution of the form 
+\begin_inset Formula $\tilde{x}(t)=\tilde{x}\left(0\right)\cos\omega t+\frac{1}{\omega}\tilde{p}\left(0\right)\sin\omega t.$
+\end_inset
+
+, which gives us,
+\begin_inset Formula 
+\begin{align}
+x(t) & =\left(x\left(0\right)\cos\omega t+\frac{2\Gamma}{\omega}p\left(0\right)\sin\omega t.\right)\\
+p\left(t\right) & =\left(p\left(0\right)\cos\omega t-2\Gamma\omega x\left(0\right)\sin\omega t.\right)\\
+\langle x(t)^{2}\rangle_{0} & =\left(\cos^{2}\omega t\langle x^{2}\rangle_{0}+\frac{4\Gamma^{2}}{\omega^{2}}\sin^{2}\omega t\ \langle p^{2}\rangle_{0}\right)
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $\left\langle \cdots\right\rangle _{0}$
+\end_inset
+
+ is the expectation value in the groundstate of the prequench Hamiltonian
+ and we have used, 
+\begin_inset Formula $\langle xp+px\rangle_{0}=\langle a^{2}+(a^{\dagger})^{2}\rangle_{0}=0$
+\end_inset
+
+.
+ Simple algebra then gives
+\begin_inset Formula 
+\begin{align}
+\langle x(t)^{2}\rangle & =\frac{1+\cos2\omega t}{2}\frac{\Gamma_{0}}{\omega_{0}}+\frac{1-\cos2\omega t}{4}\frac{\omega_{0}2\Gamma^{2}}{\omega^{2}\Gamma_{0}}\\
+ & =\frac{1}{4}\left(\frac{1}{\tilde{\omega}_{0}}+\frac{\tilde{\omega}_{0}}{\tilde{\omega}^{2}}\right)+\frac{1}{4}\left(\frac{1}{\tilde{\omega}_{0}}-\frac{\tilde{\omega}_{0}}{\tilde{\omega}^{2}}\right)\cos2\omega t
+\end{align}
+
+\end_inset
+
+where we have redefined variables, 
+\begin_inset Formula $\tilde{\omega}^{2}=\frac{\omega^{2}}{4\Gamma^{2}}=\frac{(g-1)}{g}$
+\end_inset
+
+ and likewise for 
+\begin_inset Formula $\tilde{\omega}_{0}$
+\end_inset
+
+.
+ Next we relate the expectation value of 
+\begin_inset Formula $S_{z}^{2}$
+\end_inset
+
+to that 
+\begin_inset Formula $x^{2}$
+\end_inset
+
+.
+ With 
+\begin_inset Formula $S_{{\rm tot}}^{z}=\sqrt{\frac{N}{2}}x$
+\end_inset
+
+ we have
+\begin_inset Formula 
+\begin{align}
+\langle(S_{{\rm tot}}^{z}(t))^{2}\rangle & =\frac{N}{2}\langle x(t)^{2}\rangle\label{eq: 1}\\
+ & =\frac{N}{8}\left[\left(\frac{1}{\tilde{\omega}_{0}}+\frac{\tilde{\omega}_{0}}{\tilde{\omega}^{2}}\right)+\left(\frac{1}{\tilde{\omega}_{0}}-\frac{\tilde{\omega}_{0}}{\tilde{\omega}^{2}}\right)\cos2\omega t\right]\label{eq:Analytical_time_dependence}
+\end{align}
+
+\end_inset
+
+The combination of the last two equations gives the desrired result.
+ In the limit that 
+\begin_inset Formula $\omega\ll\omega_{0}$
+\end_inset
+
+we find the average correlation to be 
+\begin_inset Formula 
+\begin{equation}
+\overline{\langle(S_{{\rm tot}}^{z}(t))^{2}\rangle}=\frac{N}{2}\frac{1}{4}\left(\frac{1}{\tilde{\omega}_{0}}+\frac{\tilde{\omega}_{0}}{\tilde{\omega}^{2}}\right)\approx\frac{N}{8}\frac{\tilde{\omega}_{0}}{\tilde{\omega}^{2}}=\frac{N\Gamma^{2}}{8\Gamma_{0}}\frac{\omega_{0}}{\omega^{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Sz2-dynamics"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, we compare the time dynamics for a fixed system size (
+\begin_inset Formula $L=100$
+\end_inset
+
+) and compare it to the above analytical formulae.
+ If we look at the system size dependence, the Holstien Primakoff approximation
+ should get better as system size increases, regardless of how close to
+ the critical point it is.
+ This is seen in 
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+(a) 
+\begin_inset Graphics
+	filename plots/Sz2t_[0_0.2_20]_from_L_100,S_50.0,J_1,Γ_4,γ_0toL_100,S_50.0,J_1,Γ_2,γ_0.pdf
+	lyxscale 50
+	width 30line%
+
+\end_inset
+
+(b) 
+\begin_inset Graphics
+	filename plots/Sz2t_[0_0.2_20]_from_L_100,S_50.0,J_1,Γ_4,γ_0toL_100,S_50.0,J_1,Γ_1.5,γ_0.pdf
+	lyxscale 50
+	width 30line%
+
+\end_inset
+
+(c) 
+\begin_inset Graphics
+	filename plots/Sz2t_[0_0.2_20]_from_L_100,S_50.0,J_1,Γ_4,γ_0toL_100,S_50.0,J_1,Γ_1.02,γ_0.pdf
+	lyxscale 50
+	width 30line%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Dynamics of 
+\begin_inset Formula $\left\langle S_{z}^{2}\right\rangle $
+\end_inset
+
+ following a quench of the magnetic field, 
+\begin_inset Formula $\Gamma_{0}\rightarrow\Gamma$
+\end_inset
+
+, comparing numerics with the predicted analytics [See Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Analytical_time_dependence"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+].for a given system size (
+\begin_inset Formula $L=100$
+\end_inset
+
+).
+ (a) quench deep in the disordered phase.
+ In this case the Holstein Primakoff approximation should be a very good
+ approximation and we see very good agreement.
+ (b) and (c) As we move closer to the critical point the approximation gets
+ worse with it performing quite badly close to the critical point.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Sz2-dynamics"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+(a)
+\begin_inset Graphics
+	filename plots/Sz2t_[0_0.2_20]_from_L_100,S_50.0,J_1,Γ_4,γ_0toL_100,S_50.0,J_1,Γ_1.02,γ_0.pdf
+	lyxscale 50
+	width 30line%
+
+\end_inset
+
+(b)
+\begin_inset Graphics
+	filename plots/Sz2t_[0_0.2_20]_from_L_1000,S_500.0,J_1,Γ_4,γ_0toL_1000,S_500.0,J_1,Γ_1.02,γ_0.pdf
+	lyxscale 50
+	width 30line%
+
+\end_inset
+
+(c)
+\begin_inset Graphics
+	filename plots/Sz2t_[0_0.2_20]_from_L_2000,S_1000.0,J_1,Γ_4,γ_0toL_2000,S_1000.0,J_1,Γ_1.02,γ_0.pdf
+	lyxscale 50
+	width 30line%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+System size dependence for a fixed quench field 
+\begin_inset Formula $\Gamma=1.02$
+\end_inset
+
+.(a) (b) and (c) correspond to 
+\begin_inset Formula $L=100$
+\end_inset
+
+, 
+\begin_inset Formula $1000$
+\end_inset
+
+ and 
+\begin_inset Formula $2000$
+\end_inset
+
+ respectively.
+ Clearly the agreement improves with system size.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let us calculate the expectation values of energy.
+ 
+\begin_inset Formula 
+\begin{align*}
+\left\langle H\right\rangle _{0} & =2\Gamma\left[\frac{1}{2}\left\langle p^{2}\right\rangle _{0}+\frac{1}{2}\frac{\omega^{2}}{4\Gamma^{2}}\left\langle x^{2}\right\rangle _{0}\right]=\frac{\omega_{0}}{2}\left[\frac{\Gamma}{2\Gamma_{0}}+\frac{\omega^{2}}{2\omega_{0}^{2}}\frac{\Gamma_{0}}{\Gamma}\right]\\
+\left\langle H_{0}\right\rangle _{0} & =2\Gamma_{0}\left[\frac{1}{2}\left\langle p^{2}\right\rangle _{0}+\frac{1}{2}\frac{\omega_{0}^{2}}{4\Gamma_{0}^{2}}\left\langle x^{2}\right\rangle _{0}\right]=\left[\frac{\omega_{0}}{4}+\frac{\omega_{0}}{4}\right]=\frac{\omega_{0}}{2}=\ensuremath{\frac{4\Gamma_{0}^{2}(g_{0}-1)}{g_{0}}}\\
+\left\langle H\right\rangle _{0}-\left\langle H_{0}\right\rangle _{0} & =\frac{\omega_{0}}{2}\left[\left(\frac{\Gamma}{2\Gamma_{0}}-1\right)+\frac{\omega^{2}}{2\omega_{0}^{2}}\frac{\Gamma_{0}}{\Gamma}\right]\\
+\left\langle H\right\rangle _{0}-\left\langle H\right\rangle _{GS} & =\frac{\omega_{0}}{2}\left[\frac{\Gamma}{2\Gamma_{0}}+\frac{\omega^{2}}{2\omega_{0}^{2}}\frac{\Gamma_{0}}{\Gamma}-\frac{\omega}{\omega_{0}}\right]
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+B.
+ Case with 
+\begin_inset Formula $\gamma_{z}=1$
+\end_inset
+
+, 
+\begin_inset Formula $\gamma_{y}=\gamma\ne0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the following, I (Mohammad) extend the previous analysis (correctly executed
+ by Paraj) to the case of the XY model
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+H=-\frac{2J}{N}[(S_{{\rm tot}}^{z})^{2}+\gamma(S_{{\rm tot}}^{y})^{2}]-2\Gamma S_{{\rm tot}}^{x}
+\end{equation}
+
+\end_inset
+
+Using the Holstein Primakoff transformation, we have (signs and factors
+ of 
+\begin_inset Formula $i$
+\end_inset
+
+ are chosen to ensure the standard commutation relations)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+S_{{\rm tot}}^{x} & =\frac{N}{2}-a^{\dagger}a=\frac{N+1}{2}-(a^{\dagger}a+\frac{1}{2})=\frac{N+1}{2}-\frac{1}{2}(x^{2}+p^{2})\\
+S_{{\rm tot}}^{z} & \approx\frac{1}{2}\sqrt{N}(a+a^{\dagger})=\sqrt{\frac{N}{2}}x\\
+S_{{\rm tot}}^{y} & \approx\frac{i}{2}\sqrt{N}(a-a^{\dagger})=-\sqrt{\frac{N}{2}}p
+\end{align}
+
+\end_inset
+
+where we have 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+defined 
+\begin_inset Quotes eld
+\end_inset
+
+position
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+momentum
+\begin_inset Quotes erd
+\end_inset
+
+ operators as
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+In this representation 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula 
+\begin{align}
+a & =\frac{1}{\sqrt{2}}(x+ip)\\
+a^{\dagger} & =\frac{1}{\sqrt{2}}(x-ip)
+\end{align}
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+With this, the Hamiltonian takes the form
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+H & =-\Gamma(N+1)+\Gamma(x^{2}+p^{2})-J(x^{2}+\gamma p^{2})\\
+ & =(\Gamma-J)x^{2}+(\Gamma-J\gamma)p^{2}+\mbox{const}
+\end{align}
+
+\end_inset
+
+It is advantageous to redefine position and momentum variables as 
+\begin_inset Formula $x\to\sqrt{2(\Gamma-J\gamma)}\tilde{x}$
+\end_inset
+
+ and 
+\begin_inset Formula $p\to\tilde{p}/\sqrt{2(\Gamma-J\gamma)}$
+\end_inset
+
+ which satisfies their commutation relation, but leads to a standard form
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+H_{0}=\frac{1}{2}\tilde{p}^{2}+\frac{1}{2}\omega^{2}\tilde{x}^{2}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\omega^{2}\equiv4(\Gamma-J)(\Gamma-J\gamma)$
+\end_inset
+
+.
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Now consider a quench of the form 
+\begin_inset Formula $(\gamma_{0},\Gamma_{0})\to(\gamma,\Gamma)$
+\end_inset
+
+.
+ Inital state 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+has equal distribution of energy in momentum and position terms of hamornic
+ oscillator, 
+\begin_inset Formula $\langle\tilde{p}^{2}/2\rangle=\omega_{0}/4$
+\end_inset
+
+ and 
+\begin_inset Formula $\langle\omega_{0}^{2}\tilde{x}^{2}/2\rangle_{0}=\omega_{0}/4$
+\end_inset
+
+, which yields 
+\begin_inset Formula $\langle\tilde{p}^{2}\rangle_{0}=\omega_{0}/2$
+\end_inset
+
+ and 
+\begin_inset Formula $\langle\tilde{x}^{2}\rangle_{0}=1/(2\omega_{0})$
+\end_inset
+
+.
+ This means we have in the initial state
+\begin_inset Formula 
+\begin{equation}
+\langle p^{2}\rangle_{0}=\frac{\omega_{0}}{4(\Gamma_{0}-J\gamma_{0})}\text{=\ensuremath{\frac{1}{2}}\ensuremath{\sqrt{\frac{\Gamma_{0}-J}{\Gamma_{0}-J\gamma_{0}}}\equiv\frac{\tilde{\omega_{0}}}{2}}, and }\langle x^{2}\rangle_{0}=\frac{\Gamma_{0}-J\gamma_{0}}{\omega_{0}}=\ensuremath{\frac{1}{2}}\ensuremath{\sqrt{\frac{\Gamma_{0}-J\gamma_{0}}{\Gamma_{0}-J}}}\equiv\frac{1}{2\tilde{\omega_{0}}},
+\end{equation}
+
+\end_inset
+
+where we have used 
+\begin_inset Formula $\omega_{0}^{2}\equiv\ensuremath{4(\Gamma_{0}-J_{0})(\Gamma_{0}-J\gamma_{0})}$
+\end_inset
+
+ and defined 
+\begin_inset Formula $\tilde{\omega}_{0}\equiv\sqrt{\frac{\Gamma_{0}-J}{\Gamma_{0}-J\gamma_{0}}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Now, evolving under the quench Hamiltonian, which is a harmonic oscillator,
+ we have the operator equation of motion after the quench is simply 
+\begin_inset Formula $\ddot{\tilde{x}}+\omega^{2}\tilde{x}=0$
+\end_inset
+
+ which admits a general solution of the form 
+\begin_inset Formula $\tilde{x}(t)=\tilde{x}\left(0\right)\cos\omega t+\frac{1}{\omega}\tilde{p}\left(0\right)\sin\omega t$
+\end_inset
+
+ which gives us,
+\begin_inset Formula 
+\begin{align}
+x(t) & =\left(x\left(0\right)\cos\omega t+\frac{2(\Gamma-J\gamma)}{\omega}p\left(0\right)\sin\omega t.\right)\\
+ & =\left(x\left(0\right)\cos\omega t+\frac{1}{\tilde{\omega}}p\left(0\right)\sin\omega t.\right)\\
+\langle x(t)^{2}\rangle_{0} & =\left(\cos^{2}\omega t\langle x^{2}\rangle_{0}+\frac{1}{\tilde{\omega}^{2}}\sin^{2}\omega t\ \langle p^{2}\rangle_{0}\right)
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $\left\langle \cdots\right\rangle _{0}$
+\end_inset
+
+ is the expectation value in the groundstate of the prequench Hamiltonian
+ and we have used, 
+\begin_inset Formula $\langle xp+px\rangle_{0}=\langle a^{2}+(a^{\dagger})^{2}\rangle_{0}=0$
+\end_inset
+
+ and defined 
+\begin_inset Formula $\tilde{\omega}\equiv\sqrt{\frac{\Gamma-J}{\Gamma-J\gamma}}$
+\end_inset
+
+.
+ Simple algebra then gives
+\begin_inset Formula 
+\begin{align}
+\langle x(t)^{2}\rangle & =\frac{1+\cos2\omega t}{2}\frac{1}{2\tilde{\omega}_{0}}+\frac{1-\cos2\omega t}{2}\frac{\tilde{\omega}_{0}}{\tilde{2\omega}^{2}}\\
+ & =\frac{1}{4}\left(\frac{1}{\tilde{\omega}_{0}}+\frac{\tilde{\omega}_{0}}{\tilde{\omega}^{2}}\right)+\frac{1}{4}\left(\frac{1}{\tilde{\omega}_{0}}-\frac{\tilde{\omega}_{0}}{\tilde{\omega}^{2}}\right)\cos2\omega t
+\end{align}
+
+\end_inset
+
+Next we relate the expectation value of 
+\begin_inset Formula $S_{z}^{2}$
+\end_inset
+
+to that 
+\begin_inset Formula $x^{2}$
+\end_inset
+
+.
+ With 
+\begin_inset Formula $S_{{\rm tot}}^{z}=\sqrt{\frac{N}{2}}x$
+\end_inset
+
+ we have
+\begin_inset Formula 
+\begin{align}
+\langle(S_{{\rm tot}}^{z}(t))^{2}\rangle & =\frac{N}{2}\langle x(t)^{2}\rangle\label{eq: 1-1}\\
+ & =\frac{N}{8}\left[\left(\frac{1}{\tilde{\omega}_{0}}+\frac{\tilde{\omega}_{0}}{\tilde{\omega}^{2}}\right)+\left(\frac{1}{\tilde{\omega}_{0}}-\frac{\tilde{\omega}_{0}}{\tilde{\omega}^{2}}\right)\cos2\omega t\right]\label{eq:Analytical_time_dependence-1}
+\end{align}
+
+\end_inset
+
+The combination of the last two equations gives the desrired result.
+ In the limit that 
+\begin_inset Formula $\omega\ll\omega_{0}$
+\end_inset
+
+we find the average correlation to be 
+\begin_inset Formula $\overline{\langle(S_{{\rm tot}}^{z}(t))^{2}\rangle}=\frac{N}{2}\frac{1}{4}\left(\frac{1}{\tilde{\omega}_{0}}+\frac{\tilde{\omega}_{0}}{\tilde{\omega}^{2}}\right)\approx\frac{N}{8}\frac{\tilde{\omega}_{0}}{\tilde{\omega}^{2}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For harmonic oscillator,
+\begin_inset Formula $a|n\rangle=\sqrt{}$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\left\langle x^{2}\right\rangle _{\beta} & =\frac{e^{-\beta\left(n\right)\omega}\left\langle n\left|x^{2}\right|n\right\rangle }{}\left(1-e^{-\beta\omega}\right)\\
+ & =\sum_{n}\frac{e^{-\beta\left(n\right)\omega}\left\langle n\left|\left(aa^{\dagger}+a^{\dagger}a\right)\right|n\right\rangle }{2\omega}\left(1-e^{-\beta\omega}\right)\\
+ & =\frac{\left(1-e^{-\beta\omega}\right)}{\omega e^{-\beta\omega/2}}\sum_{n}e^{-\beta\left(n+\frac{1}{2}\right)\omega}\left(n+\frac{1}{2}\right)\\
+ & =\frac{\left(1-e^{-\beta\omega}\right)}{\omega e^{-\beta\omega/2}}\frac{\partial}{\partial\beta\omega}\left(\frac{1}{1-e^{-\beta\omega}}\right)=\frac{\left(1-e^{-\beta\omega}\right)}{\omega e^{-\beta\omega/2}}\left(\frac{1}{1-e^{-\beta\omega}}\right)^{2}e^{-\beta\omega}\\
+ & =\frac{1}{\omega}\left(\frac{1}{e^{\beta\omega/2}-e^{-\beta\omega/2}}\right)=\frac{T}{\omega^{2}}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Different limits:
+\end_layout
+
+\begin_layout Standard
+Let's set 
+\begin_inset Formula $J=1$
+\end_inset
+
+for simplicity.
+ Consider different situations (we only consider 
+\begin_inset Formula $\gamma_{0},\gamma$
+\end_inset
+
+<1):
+\end_layout
+
+\begin_layout Standard
+1.
+ Near 
+\series bold
+quantum critical point (QCP) in equilibrium.
+\series default
+
+\begin_inset Formula $\Gamma_{0}=\Gamma\gtrapprox1$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma_{0}=\gamma$
+\end_inset
+
+.
+ In this case we have 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\overline{\langle(S_{{\rm tot}}^{z}(t))^{2}\rangle}\sim N\frac{1}{\sqrt{\Gamma-1}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+At the critical point, we should have 
+\begin_inset Formula $\overline{\langle(S_{{\rm tot}}^{z}(t))^{2}\rangle}\sim N^{4/3}.$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+2.
+ 
+\series bold
+Quench from a noncritical point to QCP .
+\series default
+
+\begin_inset Formula $\Gamma_{0}\gg1\to\Gamma\gtrapprox1$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma_{0}=\gamma$
+\end_inset
+
+.
+ In this case we have 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\overline{\langle(S_{{\rm tot}}^{z}(t))^{2}\rangle}\sim N\frac{1}{\Gamma-1}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is expected that the quench to the critical point gives 
+\begin_inset Formula $\overline{\langle(S_{{\rm tot}}^{z}(t))^{2}\rangle}\sim N^{3/2}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+3.
+ 
+\series bold
+Quench from QCP to QCP 
+\series default
+
+\begin_inset Formula $\Gamma_{0}=\Gamma\gtrapprox1$
+\end_inset
+
+and 
+\begin_inset Formula $\gamma_{0}\to\gamma$
+\end_inset
+
+.
+ In this case we have
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\overline{\langle(S_{{\rm tot}}^{z}(t))^{2}\rangle}\sim N\frac{1}{\sqrt{\Gamma-1}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The scaling is similar to the QCP in equilibrium.
+ The 
+\bar under
+milder
+\bar default
+ divergence with 
+\begin_inset Formula $\Gamma-1$
+\end_inset
+
+suggestes a milder divergence with the system size which may be identical
+ to the QCP.
+ The overall constant of proportionality will be however different.
+ 
+\end_layout
+
+\begin_layout Subsection
+Case with 
+\begin_inset Formula $\gamma_{z}$
+\end_inset
+
+, 
+\begin_inset Formula $\gamma_{y}$
+\end_inset
+
+ arbitrary
+\end_layout
+
+\begin_layout Standard
+In the following, let us extend the previous analysis to the case of the
+ arbitrary 
+\begin_inset Formula $\gamma_{z}$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma_{y}$
+\end_inset
+
+model
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+H=-\frac{2J}{N}[\gamma_{z}(S_{{\rm tot}}^{z})^{2}+\gamma_{y}(S_{{\rm tot}}^{y})^{2}]-2\Gamma S_{{\rm tot}}^{x}
+\end{equation}
+
+\end_inset
+
+Using the Holstein Primakoff transformation, we have (signs and factors
+ of 
+\begin_inset Formula $i$
+\end_inset
+
+ are chosen to ensure the standard commutation relations)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+S_{{\rm tot}}^{x} & =\frac{N}{2}-a^{\dagger}a=\frac{N+1}{2}-(a^{\dagger}a+\frac{1}{2})=\frac{N+1}{2}-\frac{1}{2}(x^{2}+p^{2})\\
+S_{{\rm tot}}^{z} & \approx\frac{1}{2}\sqrt{N}(a+a^{\dagger})=\sqrt{\frac{N}{2}}x\\
+S_{{\rm tot}}^{y} & \approx\frac{i}{2}\sqrt{N}(a-a^{\dagger})=-\sqrt{\frac{N}{2}}p
+\end{align}
+
+\end_inset
+
+where we have 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+defined 
+\begin_inset Quotes eld
+\end_inset
+
+position
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+momentum
+\begin_inset Quotes erd
+\end_inset
+
+ operators as
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+In this representation 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula 
+\begin{align}
+a & =\frac{1}{\sqrt{2}}(x+ip)\\
+a^{\dagger} & =\frac{1}{\sqrt{2}}(x-ip)
+\end{align}
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+With this, the Hamiltonian takes the form
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+H & =-\Gamma(N+1)+\Gamma(x^{2}+p^{2})-J(\gamma_{z}x^{2}+\gamma_{y}p^{2})\\
+ & =(\Gamma-J\gamma_{z})x^{2}+(\Gamma-J\gamma_{y})p^{2}+\mbox{const}
+\end{align}
+
+\end_inset
+
+It is advantageous to redefine position and momentum variables as 
+\begin_inset Formula $x\to\sqrt{2(\Gamma-J\gamma_{y})}\tilde{x}$
+\end_inset
+
+ and 
+\begin_inset Formula $p\to\tilde{p}/\sqrt{2(\Gamma-J\gamma_{y})}$
+\end_inset
+
+ which satisfies their commutation relation, but leads to a standard form
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+H_{0}=\frac{1}{2}\tilde{p}^{2}+\frac{1}{2}\omega^{2}\tilde{x}^{2}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\omega^{2}\equiv4(\Gamma-J\gamma_{z})(\Gamma-J\gamma_{y})$
+\end_inset
+
+.
+ So the critical point occurs at 
+\begin_inset Formula $\Gamma=J\max\left(\gamma_{z},\gamma_{y}\right)$
+\end_inset
+
+.
+ Note that, to do the above step we require 
+\begin_inset Formula $\Gamma>J\max\left(\gamma_{y}\right)$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Now consider a quench of the form 
+\begin_inset Formula $(\gamma_{0z},\gamma_{0y},\Gamma_{0})\to(\gamma_{z},\gamma_{y},\Gamma)$
+\end_inset
+
+.
+ Inital state 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+has equal distribution of energy in momentum and position terms of hamornic
+ oscillator, 
+\begin_inset Formula $\langle\tilde{p}^{2}/2\rangle=\omega_{0}/4$
+\end_inset
+
+ and 
+\begin_inset Formula $\langle\omega_{0}^{2}\tilde{x}^{2}/2\rangle_{0}=\omega_{0}/4$
+\end_inset
+
+, which yields 
+\begin_inset Formula $\langle\tilde{p}^{2}\rangle_{0}=\omega_{0}/2$
+\end_inset
+
+ and 
+\begin_inset Formula $\langle\tilde{x}^{2}\rangle_{0}=1/(2\omega_{0})$
+\end_inset
+
+.
+ This means we have in the initial state
+\begin_inset Formula 
+\begin{equation}
+\langle p^{2}\rangle_{0}=\frac{\omega_{0}}{4(\Gamma_{0}-J\gamma_{0y})}\text{=\ensuremath{\frac{1}{2}}\ensuremath{\sqrt{\frac{\Gamma_{0}-J\gamma_{0z}}{\Gamma_{0}-J\gamma_{0y}}}\equiv\frac{\tilde{\omega_{0}}}{2}}, and }\langle x^{2}\rangle_{0}=\frac{\Gamma_{0}-J\gamma_{0y}}{\omega_{0}}=\ensuremath{\frac{1}{2}}\ensuremath{\sqrt{\frac{\Gamma_{0}-J\gamma_{0y}}{\Gamma_{0}-J\gamma_{0z}}}}\equiv\frac{1}{2\tilde{\omega_{0}}},
+\end{equation}
+
+\end_inset
+
+where we have used 
+\begin_inset Formula $\omega_{0}^{2}\equiv\ensuremath{4(\Gamma_{0}-J_{0})(\Gamma_{0}-J\gamma_{0})}$
+\end_inset
+
+ and defined 
+\begin_inset Formula $\tilde{\omega}_{0}\equiv\sqrt{\frac{\Gamma_{0}-J\gamma_{0z}}{\Gamma_{0}-J\gamma_{0y}}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Now, evolving under the quench Hamiltonian, which is a harmonic oscillator,
+ we have the operator equation of motion after the quench is simply 
+\begin_inset Formula $\ddot{\tilde{x}}+\omega^{2}\tilde{x}=0$
+\end_inset
+
+ which admits a general solution of the form 
+\begin_inset Formula $\tilde{x}(t)=\tilde{x}\left(0\right)\cos\omega t+\frac{1}{\omega}\tilde{p}\left(0\right)\sin\omega t$
+\end_inset
+
+, , 
+\begin_inset Formula $\tilde{p}(t)=-\omega\tilde{x}\left(0\right)\sin\omega t+\tilde{p}\left(0\right)\cos\omega t$
+\end_inset
+
+ which gives us,
+\begin_inset Formula 
+\begin{align}
+x(t) & =\left(x\left(0\right)\cos\omega t+\frac{2(\Gamma-J\gamma_{y})}{\omega}p\left(0\right)\sin\omega t.\right)\\
+ & =\left(x\left(0\right)\cos\omega t+\frac{1}{\tilde{\omega}}p\left(0\right)\sin\omega t.\right)\\
+\langle x(t)^{2}\rangle_{0} & =\left(\cos^{2}\omega t\langle x^{2}\rangle_{0}+\frac{1}{\tilde{\omega}^{2}}\sin^{2}\omega t\ \langle p^{2}\rangle_{0}\right)\\
+\langle p(t)^{2}\rangle_{0} & =\left(\tilde{\omega}^{2}\sin^{2}\omega t\langle x^{2}\rangle_{0}+\cos^{2}\omega t\ \langle p^{2}\rangle_{0}\right)
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $\left\langle \cdots\right\rangle _{0}$
+\end_inset
+
+ is the expectation value in the groundstate of the prequench Hamiltonian
+ and we have used, 
+\begin_inset Formula $\langle xp+px\rangle_{0}=\langle a^{2}+(a^{\dagger})^{2}\rangle_{0}=0$
+\end_inset
+
+ and defined 
+\begin_inset Formula $\tilde{\omega}\equiv\sqrt{\frac{\Gamma-J\gamma_{z}}{\Gamma-J\gamma_{y}}}$
+\end_inset
+
+.
+ Simple algebra then gives
+\begin_inset Formula 
+\begin{align}
+\langle x(t)^{2}\rangle & =\frac{1+\cos2\omega t}{2}\frac{1}{2\tilde{\omega}_{0}}+\frac{1-\cos2\omega t}{2}\frac{\tilde{\omega}_{0}}{2\tilde{\omega}^{2}}\\
+ & =\frac{1}{4\tilde{\omega}_{0}}\left[\left(1+\frac{\tilde{\omega}_{0}^{2}}{\tilde{\omega}^{2}}\right)+\left(1-\frac{\tilde{\omega}_{0}^{2}}{\tilde{\omega}^{2}}\right)\cos2\omega t\right]\label{eq: 78}\\
+\langle p(t)^{2}\rangle & =\frac{1-\cos2\omega t}{2}\frac{\tilde{\omega}^{2}}{2\tilde{\omega}_{0}}+\frac{1+\cos2\omega t}{2}\frac{\tilde{\omega}_{0}}{2}\\
+ & =\frac{\tilde{\omega}_{0}}{4}\left[\left(1+\frac{\tilde{\omega}^{2}}{\tilde{\omega}_{0}^{2}}\right)+\left(1-\frac{\tilde{\omega}^{2}}{\tilde{\omega}_{0}^{2}}\right)\cos2\omega t\right]\\
+ & =\frac{\tilde{\omega}^{2}}{4\tilde{\omega}_{0}}\left[\left(1+\frac{\tilde{\omega}_{0}^{2}}{\tilde{\omega}^{2}}\right)-\left(1-\frac{\tilde{\omega}_{0}^{2}}{\tilde{\omega}^{2}}\right)\cos2\omega t\right]
+\end{align}
+
+\end_inset
+
+Next we relate the expectation value of 
+\begin_inset Formula $S_{z}^{2}+S_{y}^{2}$
+\end_inset
+
+ to that 
+\begin_inset Formula $x^{2}+p^{2}$
+\end_inset
+
+.
+ With 
+\begin_inset Formula $S_{{\rm tot}}^{z}=\sqrt{\frac{N}{2}}x$
+\end_inset
+
+ we have
+\begin_inset Formula 
+\begin{align}
+\langle S_{z}^{2}(t)+S_{y}^{2}(t)\rangle & =\frac{N}{2}\langle x(t)^{2}+p(t)^{2}\rangle\label{eq: 1-1-1}\\
+ & =\frac{N}{8\tilde{\omega}_{0}}\left[\left(1+\frac{\tilde{\omega}_{0}^{2}}{\tilde{\omega}^{2}}\right)\left(1+\tilde{\omega}^{2}\right)+\left(1-\frac{\tilde{\omega}_{0}^{2}}{\tilde{\omega}^{2}}\right)\left(1-\tilde{\omega}^{2}\right)\cos2\omega t\right]\label{eq:Analytical_time_dependence-1-1}
+\end{align}
+
+\end_inset
+
+The combination of the last two equations gives the desrired result.
+ 
+\end_layout
+
+\begin_layout Standard
+Let us now calculate the energy in the quench
+\begin_inset Formula 
+\begin{align*}
+\left\langle H\right\rangle _{0} & =2(\Gamma-J\gamma_{y})\left[\frac{1}{2}\left\langle p^{2}\right\rangle _{0}+\frac{1}{2}\right]=(\Gamma-J\gamma_{y})\frac{\tilde{\omega}^{2}}{2\tilde{\omega}_{0}}\left(1+\frac{\tilde{\omega}_{0}^{2}}{\tilde{\omega}^{2}}\right)\\
+\left\langle H_{0}\right\rangle _{0} & =2\Gamma_{0}\left[\frac{1}{2}\left\langle p^{2}\right\rangle _{0}+\frac{1}{2}\frac{\omega_{0}^{2}}{4\Gamma_{0}^{2}}\left\langle x^{2}\right\rangle _{0}\right]=\left[\frac{\omega_{0}}{4}+\frac{\omega_{0}}{4}\right]=\frac{\omega_{0}}{2}=\ensuremath{\frac{4\Gamma_{0}^{2}(g_{0}-1)}{g_{0}}}\\
+\left\langle H\right\rangle _{0}-\left\langle H_{0}\right\rangle _{0} & =\frac{\omega_{0}}{2}\left[\left(\frac{\Gamma}{2\Gamma_{0}}-1\right)+\frac{\omega^{2}}{2\omega_{0}^{2}}\frac{\Gamma_{0}}{\Gamma}\right]\\
+\left\langle H\right\rangle _{0}-\left\langle H\right\rangle _{GS} & =\frac{\omega_{0}}{2}\left[\frac{\Gamma}{2\Gamma_{0}}+\frac{\omega^{2}}{2\omega_{0}^{2}}\frac{\Gamma_{0}}{\Gamma}-\frac{\omega}{\omega_{0}}\right]
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Correlation functions are obtained in a straightforward way from correlators
+ of 
+\begin_inset Formula $x(t)$
+\end_inset
+
+ at different times.
+ Simple algebra yields 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{1}{2}\langle x(t)x(t')+x(t')x(t)\rangle & =\cos\omega t\cos\omega t'\langle x^{2}\rangle_{0}+\frac{1}{\tilde{\omega}^{2}}\sin\omega t\sin\omega t'\ \langle p^{2}\rangle_{0}\\
+ & =\frac{1}{2}(\cos\omega(t-t')+\cos\omega(t+t'))\langle x^{2}\rangle_{0}+\frac{1}{\tilde{\omega}^{2}}\frac{1}{2}(\cos\omega(t-t')-\cos\omega(t+t'))\langle p^{2}\rangle_{0}\\
+ & =\frac{1}{2}\cos\omega(t-t')(\langle x^{2}\rangle_{0}+\frac{1}{\tilde{\omega}^{2}}\langle p^{2}\rangle_{0})+\frac{1}{2}\cos\omega(t+t')(\langle x^{2}\rangle_{0}-\frac{1}{\tilde{\omega}^{2}}\langle p^{2}\rangle_{0})\\
+ & \approx\frac{1}{2}\cos\omega(t-t')(\langle x^{2}\rangle_{0}+\frac{1}{\tilde{\omega}^{2}}\langle p^{2}\rangle_{0})+\mbox{highly oscillating terms}
+\end{align}
+
+\end_inset
+
+where in the last line, I dropped the terms which depend on 
+\begin_inset Formula $t+t'$
+\end_inset
+
+ as they are highly oscillatory in time (
+\bar under
+we should confirm if this is justified in the numerics
+\bar default
+).
+ Therefore, the same algebra that leads to Eq.
+ (
+\begin_inset Formula $\text{\ref{eq: 78}}$
+\end_inset
+
+) now leads to 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{1}{2}\langle x(t)x(t')+x(t')x(t)\rangle & =\frac{1}{4\tilde{\omega}_{0}}\left[\left(1+\frac{\tilde{\omega}_{0}^{2}}{\tilde{\omega}^{2}}\right)\cos\omega(t-t')+\left(1-\frac{\tilde{\omega}_{0}^{2}}{\tilde{\omega}^{2}}\right)\cos\omega(t+t')\right]\\
+ & \frac{1}{4\tilde{\omega}_{0}}\left(1+\frac{\tilde{\omega}_{0}^{2}}{\tilde{\omega}^{2}}\right)\cos\omega(t-t')+\mbox{highly oscillating terms}
+\end{align}
+
+\end_inset
+
+One can find the commutator in a similar fashion as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\langle[x(t),x(t')]\rangle=-\frac{1}{\omega}(\cos\omega t\sin\omega t'-\sin\omega t\cos\omega t')=\frac{1}{\omega}\sin\omega(t-t')
+\end{equation}
+
+\end_inset
+
+The commutator is rather trivial in the sense that it does not depend on
+ the initial state, and is just identical to the commutator of a free harmonic
+ oscillator with natural frequency 
+\begin_inset Formula $\omega.$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Different limits:
+\end_layout
+
+\begin_layout Standard
+Let's set 
+\begin_inset Formula $J=1$
+\end_inset
+
+for simplicity.
+ Consider different situations (we only consider 
+\begin_inset Formula $\gamma_{0},\gamma$
+\end_inset
+
+<1):
+\end_layout
+
+\begin_layout Standard
+1.
+ Near 
+\series bold
+quantum critical point (QCP) in equilibrium.
+\series default
+
+\begin_inset Formula $\Gamma_{0}=\Gamma\gtrapprox1$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma_{0}=\gamma$
+\end_inset
+
+.
+ In this case we have 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\overline{\langle(S_{{\rm tot}}^{z}(t))^{2}\rangle}\sim N\frac{1}{\sqrt{\Gamma-1}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+At the critical point, we should have 
+\begin_inset Formula $\overline{\langle(S_{{\rm tot}}^{z}(t))^{2}\rangle}\sim N^{4/3}.$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+2.
+ 
+\series bold
+Quench from a noncritical point to QCP .
+\series default
+
+\begin_inset Formula $\Gamma_{0}\gg1\to\Gamma\gtrapprox1$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma_{0}=\gamma$
+\end_inset
+
+.
+ In this case we have 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\overline{\langle(S_{{\rm tot}}^{z}(t))^{2}\rangle}\sim N\frac{1}{\Gamma-1}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is expected that the quench to the critical point gives 
+\begin_inset Formula $\overline{\langle(S_{{\rm tot}}^{z}(t))^{2}\rangle}\sim N^{3/2}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+3.
+ 
+\series bold
+Quench from QCP to QCP 
+\series default
+
+\begin_inset Formula $\Gamma_{0}=\Gamma\gtrapprox1$
+\end_inset
+
+and 
+\begin_inset Formula $\gamma_{0}\to\gamma$
+\end_inset
+
+.
+ In this case we have
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\overline{\langle(S_{{\rm tot}}^{z}(t))^{2}\rangle}\sim N\frac{1}{\sqrt{\Gamma-1}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The scaling is similar to the QCP in equilibrium.
+ The 
+\bar under
+milder
+\bar default
+ divergence with 
+\begin_inset Formula $\Gamma-1$
+\end_inset
+
+suggestes a milder divergence with the system size which may be identical
+ to the QCP.
+ The overall constant of proportionality will be however different.
+ 
+\end_layout
+
+\begin_layout Section
+Numeric results for Equilibrium state
+\end_layout
+
+\begin_layout Standard
+In this section we tabulate exponents for different equilibrium states 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="6">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Ground State Hamiltonian
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left\langle S_{z}^{2}\right\rangle _{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ 
+\begin_inset Formula $\left\langle S_{y}^{2}\right\rangle _{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left\langle S_{z}^{2}+S_{y}^{2}\right\rangle _{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left\langle H_{0}\right\rangle _{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\text{S}=-\text{Tr}\left[\rho_{A}\log\rho_{A}\right]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula ${J=1,\gamma_{z}=1,\gamma_{y}=0,\Gamma=4}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula ${J=1,\gamma_{z}=1,\gamma_{y}=0,\Gamma=1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula ${J=1,\gamma_{z}=1,\gamma_{y}=0.5,\Gamma=1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula ${J=1,\gamma_{z}=0,\gamma_{y}=1,\Gamma=1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Tabulating the different exponents for the behavior of 
+\begin_inset Formula $\left\langle S_{z}^{2}\right\rangle $
+\end_inset
+
+, 
+\begin_inset Formula $\left\langle S_{y}^{2}\right\rangle $
+\end_inset
+
+ and 
+\begin_inset Formula $\left\langle S_{z}^{2}+S_{y}^{2}\right\rangle $
+\end_inset
+
+ of different quenches.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Numeric results for Different Quenches
+\end_layout
+
+\begin_layout Standard
+In this section, we consider 4 different quenches 
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $H_{0}\rightarrow{J=1,\gamma_{z}=1,\gamma_{y}=0,\Gamma=4}$
+\end_inset
+
+ to(a) 
+\begin_inset Formula $H_{f}\rightarrow{J=1,\gamma_{z}=1,\gamma_{y}=0,\Gamma=2}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $H_{0}\rightarrow{J=1,\gamma_{z}=1,\gamma_{y}=0,\Gamma=4}$
+\end_inset
+
+ to(a) 
+\begin_inset Formula $H_{f}\rightarrow{J=1,\gamma_{z}=1,\gamma_{y}=0,\Gamma=1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $H_{0}\rightarrow{J=1,\gamma_{z}=1,\gamma_{y}=0,\Gamma=1}$
+\end_inset
+
+ to(a) 
+\begin_inset Formula $H_{f}\rightarrow{J=1,\gamma_{z}=1,\gamma_{y}=0.5,\Gamma=1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $H_{0}\rightarrow{J=1,\gamma_{z}=1,\gamma_{y}=0,\Gamma=1}$
+\end_inset
+
+ to(a) 
+\begin_inset Formula $H_{f}\rightarrow{J=1,\gamma_{z}=0,\gamma_{y}=1,\Gamma=1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Local Observables: 
+\begin_inset Formula $\left\langle S_{z}^{2}\right\rangle $
+\end_inset
+
+, 
+\begin_inset Formula $\left\langle S_{y}^{2}\right\rangle $
+\end_inset
+
+ and 
+\begin_inset Formula $\left\langle S_{z}^{2}+S_{y}^{2}\right\rangle $
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+In this section we consider a quench between two critical points for the
+ Hamiltonian.
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+(a) (b)
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Example phase diagram.
+ (a) Fixed 
+\begin_inset Formula $\Gamma=1$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $\gamma_{z}$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma_{y}$
+\end_inset
+
+ (b) Magnetization as a function of 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+ for 
+\begin_inset Formula $\gamma_{z}=1$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma_{y}=0$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+(a) (b) (c)
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+In this figure we show the finite size dependence in the ground state of
+ 
+\begin_inset Formula $\left\langle S_{z}^{2}+S_{y}^{2}\right\rangle _{0}$
+\end_inset
+
+ for the Hamiltonians (a) 
+\begin_inset Formula $H_{f}\rightarrow{J=1,\gamma_{z}=0,\gamma_{y}=1,\Gamma=1}$
+\end_inset
+
+ (b) 
+\begin_inset Formula $H_{f}\rightarrow{J=1,\gamma_{z}=1,\gamma_{y}=0.5,\Gamma=1}$
+\end_inset
+
+, (c) 
+\begin_inset Formula $H_{f}\rightarrow{J=1,\gamma_{z}=0.5,\gamma_{y}=1,\Gamma=1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+(a) (b) (c)
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+In this figure we show the time dependence of 
+\begin_inset Formula $\left\langle S_{z}^{2}\left(t\right)+S_{y}^{2}\left(t\right)\right\rangle $
+\end_inset
+
+ for a particular system size 
+\begin_inset Formula $L=1000$
+\end_inset
+
+, with the initial state as the ground state of 
+\begin_inset Formula $H_{0}\rightarrow{J=1,\gamma_{z}=1,\gamma_{y}=0,\Gamma=1}$
+\end_inset
+
+ to(a) 
+\begin_inset Formula $H_{f}\rightarrow{J=1,\gamma_{z}=0,\gamma_{y}=1,\Gamma=1}$
+\end_inset
+
+ (b) 
+\begin_inset Formula $H_{f}\rightarrow{J=1,\gamma_{z}=1,\gamma_{y}=0.5,\Gamma=1}$
+\end_inset
+
+, (c) 
+\begin_inset Formula $H_{f}\rightarrow{J=1,\gamma_{z}=0.5,\gamma_{y}=1,\Gamma=1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+(a) (b) (c)
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+In this figure we show the finite size dependence long-time value/ time-averaged
+ value 
+\begin_inset Formula $\overline{\left\langle S_{z}^{2}\left(t\right)+S_{y}^{2}\left(t\right)\right\rangle }=\frac{1}{t}\int_{0}^{t}\left\langle S_{z}^{2}\left(t\right)+S_{y}^{2}\left(t\right)\right\rangle $
+\end_inset
+
+, with the initial state as the ground state of 
+\begin_inset Formula $H_{0}\rightarrow{J=1,\gamma_{z}=1,\gamma_{y}=0,\Gamma=1}$
+\end_inset
+
+ quenched to (a) 
+\begin_inset Formula $H_{f}\rightarrow{J=1,\gamma_{z}=0,\gamma_{y}=1,\Gamma=1}$
+\end_inset
+
+ (b) 
+\begin_inset Formula $H_{f}\rightarrow{J=1,\gamma_{z}=1,\gamma_{y}=0.5,\Gamma=1}$
+\end_inset
+
+, (c) 
+\begin_inset Formula $H_{f}\rightarrow{J=1,\gamma_{z}=0.5,\gamma_{y}=1,\Gamma=1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+(a) (b) (c)
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+In this figure we show dependence of the correlator 
+\begin_inset Formula $\left\langle S_{z}\left(t\right)\right\rangle $
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="6" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Quench protocol
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="3" alignment="center" valignment="middle" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left\langle S_{z}^{2}\right\rangle _{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="3" alignment="center" valignment="middle" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ 
+\begin_inset Formula $\left\langle S_{y}^{2}\right\rangle _{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="3" alignment="center" valignment="middle" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left\langle S_{z}^{2}+S_{y}^{2}\right\rangle _{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $H_{0}\rightarrow{J_{0},\gamma_{z0},\gamma_{y0},\Gamma_{0}}$
+\end_inset
+
+to 
+\begin_inset Formula $H_{f}\rightarrow{J_{f},\gamma_{zf},\gamma_{yf},\Gamma_{f}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="middle" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula ${1,1,0,4}\rightarrow{1,1,0,2}$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula ${1,1,0,4}\rightarrow{1,1,0,1}$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula ${1,1,0,1}\rightarrow{1,1,0.5,1}$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula ${1,1,0,1}\rightarrow{1,0,1,1}$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Tabulating the different exponents for the behavior of 
+\begin_inset Formula $\left\langle S_{z}^{2}\right\rangle $
+\end_inset
+
+, 
+\begin_inset Formula $\left\langle S_{y}^{2}\right\rangle $
+\end_inset
+
+ and 
+\begin_inset Formula $\left\langle S_{z}^{2}+S_{y}^{2}\right\rangle $
+\end_inset
+
+ of different quenches.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Energy density 
+\end_layout
+
+\begin_layout Standard
+In this section we tabulate the different exponents for different quenches.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="6" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Quench protocol
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="3" alignment="center" valignment="middle" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ 
+\begin_inset Formula $\left\langle H_{f}\right\rangle _{0}-\left\langle H_{0}\right\rangle _{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="3" alignment="center" valignment="middle" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left\langle H_{f}^{2}\right\rangle _{0}-\left\langle H_{f}\right\rangle _{0}^{2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="3" alignment="center" valignment="middle" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left\langle H_{f}\right\rangle _{0}-\left\langle H_{f}\right\rangle _{GS}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="3" alignment="center" valignment="middle" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{\left\langle H_{f}\right\rangle _{0}-\left\langle H_{f}\right\rangle _{GS}}{\left\langle H_{f}\right\rangle _{FES}-\left\langle H_{f}\right\rangle _{GS}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $H_{0}\rightarrow{J_{0},\gamma_{z0},\gamma_{y0},\Gamma_{0}}$
+\end_inset
+
+to 
+\begin_inset Formula $H_{f}\rightarrow{J_{f},\gamma_{zf},\gamma_{yf},\Gamma_{f}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="middle" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula ${1,1,0,4}\rightarrow{1,1,0,2}$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $L^{1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $L^{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $L^{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $L^{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula ${1,1,0,4}\rightarrow{1,1,0,1}$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $L^{1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $L^{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $L^{0.1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $L^{0.42}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula ${1,1,0,1}\rightarrow{1,1,0.5,1}$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $L^{0.05}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $L^{-0.64}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $L^{-0.31}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $L^{0.01}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula ${1,1,0,1}\rightarrow{1,0,1,1}$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $L^{0.34}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $L^{0.64}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $L^{0.34}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $L^{0.66}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Tabulating the different exponents for the behavior of energy density of
+ different quenches.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Entanglement entropy 
+\end_layout
+
+\begin_layout Standard
+In this section we tabulate the different exponents for different quenches.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Tabulating the different exponents for the behavior of energy density of
+ different quenches.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Effective temperature
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+N^{\beta-2\alpha}\begin{cases}
+N^{0}=\omega^{0} & \text{Type-I}\\
+N^{-1/3}=\omega^{1} & \text{Type-II}\\
+N^{1/3}=\omega^{-2} & \text{Type-III}\\
+\frac{\omega^{2}}{\omega_{0}}+\omega_{0} & \text{Deep Disordered}
+\end{cases}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Future plans
+\end_layout
+
+\begin_layout Itemize
+Fluctuation-dissipation relation is satisfied? Fluctuations are characterized
+ by 
+\begin_inset Formula $\langle S_{z}^{2}\rangle$
+\end_inset
+
+, while dissipation is given by 
+\begin_inset Formula $[S_{z}(t),S_{z}(t^{\prime})]_{-}.$
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $t,t^{\prime},\left|t-t^{\prime}\right|\rightarrow\infty$
+\end_inset
+
+, with 
+\begin_inset Formula $\frac{1}{t}\left|t-t^{\prime}\right|,\frac{1}{t^{\prime}}\left|t-t^{\prime}\right|\rightarrow0$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Aging exponents: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Start from a nonzero magnetization (
+\begin_inset Formula $\langle S_{z}\rangle\ne0$
+\end_inset
+
+) on the ordered side of the critical point (
+\begin_inset Formula $\Gamma_{0}\lessapprox1$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma_{0}$
+\end_inset
+
+ to 
+\begin_inset Formula $\Gamma=1$
+\end_inset
+
+and 
+\begin_inset Formula $\gamma\ne\gamma_{0}$
+\end_inset
+
+) near the critical point.
+ The decay of the magnetization to zero as a function of time defines the
+ aging behavior.
+\end_layout
+
+\begin_layout Itemize
+Alternatively, we can take
+\begin_inset Formula $\Gamma_{0}=\Gamma=1$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma_{0}\to\gamma\ne\gamma_{0}$
+\end_inset
+
+and compute the response function 
+\begin_inset Formula $\langle[S_{z}(t),S_{z}(t')]_{\pm}\rangle$
+\end_inset
+
+.
+ Consider two different limits:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $|t-t'|\ll t,t'$
+\end_inset
+
+which gives the reponse function in the late-time steady state
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $t'\ll t$
+\end_inset
+
+ which gives the response to an early perturbation and produces the aging
+ exponent.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+OTOC: any nontrivial exponents?
+\end_layout
+
+\begin_layout Itemize
+Coarsening
+\end_layout
+
+\begin_layout Section
+Questions for Mohammad
+\end_layout
+
+\begin_layout Itemize
+Is it necessary to restrict the symmetry sector.
+ The ground state obtained numerically seem to be a random superposition
+ of the symmetric states.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $U(1)\rightarrow\mathbb{Z}_{2}$
+\end_inset
+
+ How to handle this symmetry.
+\end_layout
+
+\end_body
+\end_document
